@@ -1,3 +1,9 @@
+"""Rules for building Go programs.
+Rules take a description of something to build (for example, the sources and
+dependencies of a library) and create a plan of how to build it (output files,
+actions).
+"""
+
 load(":actions.bzl", "go_compile", "go_link")
 
 def _go_binary_impl(ctx):
@@ -30,6 +36,9 @@ def _go_binary_impl(ctx):
         executable = executable,
     )]
 
+# Declare the go_binary rule. This statement is evaluated during the loading
+# phase when this file is loaded. The function body above is evaluated only
+# during the analysis phase.
 go_binary = rule(
     _go_binary_impl,
     attrs = {

@@ -1,3 +1,9 @@
+"""Common functions for creating actions to build Go programs.
+Rules should determine input and output files and providers, but they should
+call functions to create actions. This allows action code to be shared
+by multiple rules.
+"""
+
 load("@bazel_skylib//:lib.bzl", "shell")
 
 def go_compile(ctx, srcs, out):
