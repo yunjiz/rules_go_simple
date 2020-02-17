@@ -19,6 +19,7 @@ def go_compile(ctx, srcs, out):
         out = shell.quote(out.path),
         srcs = " ".join([shell.quote(src.path) for src in srcs]),
     )
+    print(cmd)
     ctx.actions.run_shell(
         outputs = [out],
         inputs = srcs,
@@ -38,6 +39,7 @@ def go_link(ctx, out, main):
         out = shell.quote(out.path),
         main = shell.quote(main.path),
     )
+    print(cmd)
     ctx.actions.run_shell(
         outputs = [out],
         inputs = [main],
