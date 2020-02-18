@@ -11,21 +11,26 @@ def _go_binary_impl(ctx):
     # Declare an output file for the main package and compile it from srcs. All
     # our output files will start with a prefix to avoid conflicting with
     # other rules.
-    prefix = ctx.label.name + "%/"
-    main_archive = ctx.actions.declare_file(prefix + "main.a")
+    #prefix = ctx.label.name + "%/"
+    #main_archive = ctx.actions.declare_file(prefix + "main.a")
+    main_archive = declare_archive(ctx, "main")
     go_compile(
         ctx,
         srcs = ctx.files.srcs,
+        deps = [dep[GoLibraryInfo] for dep in ctx.attr.deps],
         out = main_archive,
     )
 
     # Declare an output file for the executable and link it. Note that output
     # files may not have the same name as the rule, so we still need to use the
     # prefix here.
-    executable = ctx.actions.declare_file(prefix + ctx.label.name)
+    executable_path = "{name}%/{name}".format(name = ctx.label.name)
+    #executable = ctx.actions.declare_file(prefix + ctx.label.name)
+    executable = ctx.actions.declare_file(executable_path)
     go_link(
         ctx,
         main = main_archive,
+        deps = [dep[GoLibraryInfo] for dep in ctx.attr.deps],
         out = executable,
     )
 
