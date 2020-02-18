@@ -51,3 +51,23 @@ go_library(
     importpath = "rules_go_simple/tests/baz",
 )
 
+sh_test(
+    name = "data_test",
+    srcs = ["data_test.sh"],
+    args = ["$(location :list_data_bin)"],
+    data = [":list_data_bin"],
+)
+
+go_binary(
+    name = "list_data_bin",
+    srcs = ["list_data_bin.go"],
+    deps = [":list_data_lib"],
+    data = ["foo.txt"],
+)
+
+go_library(
+    name = "list_data_lib",
+    srcs = ["list_data_lib.go"],
+    data = ["bar.txt"],
+    importpath = "rules_go_simple/tests/list_data_lib"
+)

@@ -39,6 +39,7 @@ def _go_binary_impl(ctx):
     # one is executable (in this case, there's only one).
     return [DefaultInfo(
         files = depset([executable]),
+        runfiles = ctx.runfiles(collect_data = True),
         executable = executable,
     )]
 
@@ -54,7 +55,10 @@ def _go_library_impl(ctx):
 
     # Return the output file and metadata about the library.
     return [
-        DefaultInfo(files = depset([archive])),
+        DefaultInfo(
+            files = depset([archive]),
+            runfiles = ctx.runfiles(collect_data = True),
+        ),
         GoLibraryInfo(
             info = struct(
                 importpath = ctx.attr.importpath,
@@ -82,6 +86,10 @@ go_binary = rule(
             providers = [GoLibraryInfo],
             doc = "Direct dependencies of the binary",
         ),
+        "data": attr.label_list(
+            allow_files = True,
+            doc = "Data files available to this binary at run-time",
+        ),
     },
     doc = "Builds an executable program from Go source code",
     executable = True,
@@ -97,6 +105,10 @@ go_library = rule(
         "deps": attr.label_list(
             providers = [GoLibraryInfo],
             doc = "Direct dependencies of the library",
+        ),
+        "data": attr.label_list(
+            allow_files = True,
+            doc = "Data files available to binaries using this library",
         ),
         "importpath": attr.string(
             mandatory = True,
